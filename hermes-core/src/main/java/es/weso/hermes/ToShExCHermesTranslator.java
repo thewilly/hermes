@@ -10,25 +10,25 @@ import java.util.Objects;
  * The ToShExCHermesTranslator is the specific implementation of {@link HermesTranslator} interface to translate from
  * CSV to ShExC.
  *
+ * @author Guillermo Facundo Colunga
  * @version 1.0.0
  * @since 1.0.0
- * @author Guillermo Facundo Colunga
  */
 public class ToShExCHermesTranslator implements HermesTranslator {
 
     // Static fields.
-    public static final String CSV_SEPARATOR_CHAR = ",";
-    public static final String PREFIX_FORMAT_STRING = "PREFIX %s:%s;\n";
-    public static final String SHAPE_DECL_FORMAT_STRING = "%s {\n";
+    public static final String CSV_SEPARATOR_CHAR        = ",";
+    public static final String PREFIX_FORMAT_STRING      = "PREFIX %s:%s;\n";
+    public static final String SHAPE_DECL_FORMAT_STRING  = "%s {\n";
     public static final String TRIPLE_EXPR_FORMAT_STRING = "\t%s %s {%s,%s};\n";
-    public static final String SHAPE_DECL_CLOSING_CHAR = "}\n";
+    public static final String SHAPE_DECL_CLOSING_CHAR   = "}\n";
 
     @Override
     public String translate(final String prefixesCSVFile, final String shapesCSVFile) throws TranslationException, IOException {
         // 1. Sanity checks.
-        if(Objects.isNull(prefixesCSVFile)) {
+        if (Objects.isNull(prefixesCSVFile)) {
             throw new IllegalArgumentException("The prefixes CSV file cannot be null");
-        } else if(Objects.isNull(shapesCSVFile)) {
+        } else if (Objects.isNull(shapesCSVFile)) {
             throw new IllegalArgumentException("The shapes CSV file cannot be null");
         }
 
@@ -46,7 +46,7 @@ public class ToShExCHermesTranslator implements HermesTranslator {
 
         // Processing ther prefixes file.
         try {
-            while((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 String[] cells = line.split(CSV_SEPARATOR_CHAR);
                 output.append(String.format(PREFIX_FORMAT_STRING, cells[0], cells[1])); // We insert the string 'PREFIX label:uri;'
             }
@@ -62,7 +62,7 @@ public class ToShExCHermesTranslator implements HermesTranslator {
         br = new BufferedReader(fr);
         try {
             String lastShape = ""; // Current shape
-            while((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 String[] cells = line.split(CSV_SEPARATOR_CHAR);
 
                 // Parsed shape parts.
@@ -73,8 +73,8 @@ public class ToShExCHermesTranslator implements HermesTranslator {
                 String max = cells[4];
 
                 // If the current shape label is equals to the previous one we are still processing it.
-                if(!shapeLabel.equals(lastShape)) {
-                    if(!lastShape.isEmpty()) {
+                if (!shapeLabel.equals(lastShape)) {
+                    if (!lastShape.isEmpty()) {
                         output.append(SHAPE_DECL_CLOSING_CHAR);
                     }
                     output.append(String.format(SHAPE_DECL_FORMAT_STRING, shapeLabel)); // A new Shape Expression decl. has been found.
